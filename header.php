@@ -69,6 +69,15 @@
     function applyBs5AttrBridge() {
       if (!window.jQuery) return;
       var $ = window.jQuery;
+
+      // Configuracion global para evitar CORS por URL relativa en DataTables.
+      window.DATATABLES_LANG_ES_URL = 'https://cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json';
+      if ($.fn && $.fn.dataTable && $.fn.dataTable.defaults) {
+        $.extend(true, $.fn.dataTable.defaults, {
+          language: { url: window.DATATABLES_LANG_ES_URL }
+        });
+      }
+
       $('[data-toggle]').each(function () {
         var $el = $(this);
         if (!$el.attr('data-bs-toggle')) {

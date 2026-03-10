@@ -101,7 +101,7 @@
 			"responsive": false,
 			"order": [[1, "asc"]],
 			"language": {
-				"url": "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+				"url": "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
 			}
 		});
 	}
@@ -111,3 +111,4 @@
 		$('.select2').select2({})
 	})
 </script>
+

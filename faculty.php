@@ -20,13 +20,12 @@
 		UNIQUE KEY uq_faculty_level (faculty_id, level_id)
 	) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 
-	$legacy_levels = $conn->query("SELECT DISTINCT TRIM(level_section) AS level_name FROM students WHERE TRIM(level_section) <> ''");
-	if ($legacy_levels && $legacy_levels->num_rows > 0) {
-		while ($lvl = $legacy_levels->fetch_assoc()) {
-			$lvl_name_sql = $conn->real_escape_string($lvl['level_name']);
-			$conn->query("INSERT IGNORE INTO levels (level_name) VALUES ('{$lvl_name_sql}')");
-		}
+	$default_chk = $conn->query("SELECT id FROM levels WHERE level_name = 'Default' LIMIT 1");
+	if (!$default_chk || $default_chk->num_rows === 0) {
+		$conn->query("UPDATE levels SET level_name = 'Default' WHERE level_name = '1A' LIMIT 1");
 	}
+
+	$conn->query("INSERT IGNORE INTO levels (level_name, state) VALUES ('Default', 1)");
 
 	$levels = array();
 	$levels_qry = $conn->query("SELECT id, level_name FROM levels WHERE state = 1 ORDER BY level_name ASC");
@@ -183,7 +182,7 @@
 			"responsive": false,
 			"order": [[1, "asc"]],
 			"language": {
-				"url": "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+				"url": "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
 			}
 		});
 	}
@@ -292,4 +291,5 @@
 		})
 	})
 </script>
+
 

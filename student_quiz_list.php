@@ -134,7 +134,7 @@ include 'header_adminlte.php';
 			"order": [[1, "asc"]],
 			"pageLength": 10,
 			"language": {
-				"url": "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
+				"url": "https://cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
 			},
 			"drawCallback": function() {
 				// Ajusta el ancho mínimo de la tabla después de redibujar
@@ -156,4 +156,5 @@ include 'header_adminlte.php';
 		});
 	})
 </script>
+
 

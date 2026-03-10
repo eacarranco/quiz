@@ -58,6 +58,14 @@ $(function() {
     };
   }
 
+  // Configuracion global para evitar CORS por URL relativa en DataTables.
+  window.DATATABLES_LANG_ES_URL = 'https://cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json';
+  if ($.fn && $.fn.dataTable && $.fn.dataTable.defaults) {
+    $.extend(true, $.fn.dataTable.defaults, {
+      language: { url: window.DATATABLES_LANG_ES_URL }
+    });
+  }
+
   // Marca activo el item de sidebar según URL actual
   var path = window.location.pathname.split('/').pop();
   $('.sidebar-menu .nav-link').each(function () {

@@ -32,15 +32,20 @@ if ($has_level_id && $has_level_id->num_rows === 0) {
     $conn->query("ALTER TABLE students ADD COLUMN level_id INT NULL AFTER user_id");
 }
 
-$legacy_levels = $conn->query("SELECT DISTINCT TRIM(level_section) AS level_name FROM students WHERE TRIM(level_section) <> ''");
-if ($legacy_levels && $legacy_levels->num_rows > 0) {
-    while ($lvl = $legacy_levels->fetch_assoc()) {
-        $lvl_name_sql = $conn->real_escape_string($lvl['level_name']);
-        $conn->query("INSERT IGNORE INTO levels (level_name) VALUES ('{$lvl_name_sql}')");
-    }
+$default_chk = $conn->query("SELECT id FROM levels WHERE level_name = 'Default' LIMIT 1");
+if (!$default_chk || $default_chk->num_rows === 0) {
+    $conn->query("UPDATE levels SET level_name = 'Default' WHERE level_name = '1A' LIMIT 1");
 }
 
-$conn->query("UPDATE students s INNER JOIN levels l ON l.level_name = s.level_section SET s.level_id = l.id WHERE (s.level_id IS NULL OR s.level_id = 0) AND TRIM(s.level_section) <> ''");
+$conn->query("INSERT IGNORE INTO levels (level_name, state) VALUES ('Default', 1)");
+
+$default_row = $conn->query("SELECT id FROM levels WHERE level_name = 'Default' LIMIT 1");
+$default_id = ($default_row && $default_row->num_rows > 0) ? intval($default_row->fetch_assoc()['id']) : 0;
+
+if ($default_id > 0) {
+    $conn->query("UPDATE students SET level_id = {$default_id}, level_section = 'Default' WHERE TRIM(level_section) = '1A'");
+    $conn->query("UPDATE students SET level_id = {$default_id}, level_section = 'Default' WHERE (level_id IS NULL OR level_id = 0)");
+}
 
 $qry = $conn->query("SELECT l.id, l.level_name, l.state,
     COUNT(DISTINCT s.id) AS students_count,
@@ -194,7 +199,7 @@ function initLevelsPage() {
             autoWidth: false,
             responsive: false,
             order: [[1, 'asc']],
-            language: { url: '//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json' }
+            language: { url: 'https://cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json' }
         });
     }
 
@@ -346,3 +351,4 @@ if (document.readyState === 'loading') {
 </script>
 
 <?php include('footer_adminlte.php'); ?>
+
