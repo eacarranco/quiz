@@ -1,6 +1,7 @@
 <?php
 include('auth.php');
 include('db_connect.php');
+include('student_scope.php');
 $title = 'Listado de cuestionarios';
 include 'header_adminlte.php';
 ?>
@@ -74,38 +75,11 @@ include 'header_adminlte.php';
 						</thead>
 						<tbody>
 							<?php
-							// Obtener el level_id del estudiante actual
 							$loginId = intval($_SESSION['login_id']);
-							$st_row = $conn->query("SELECT level_id FROM students WHERE user_id = {$loginId} LIMIT 1");
-							$student_level_id = ($st_row && $st_row->num_rows > 0) ? intval($st_row->fetch_assoc()['level_id']) : 0;
+							$scope = getStudentScope($conn, $loginId, 'ql', 'e');
+							$quiz_visibility_condition = $scope['quiz_visibility_condition'];
 
-							// Obtener los profesores (user_id) asignados al nivel del estudiante
-							$faculty_ids = array();
-							if ($student_level_id > 0) {
-								$fac_qry = $conn->query("
-									SELECT DISTINCT f.user_id
-									FROM faculty f
-									INNER JOIN faculty_levels fl ON f.id = fl.faculty_id
-									WHERE fl.level_id = {$student_level_id}
-								");
-								if ($fac_qry && $fac_qry->num_rows > 0) {
-									while ($fac = $fac_qry->fetch_assoc()) {
-										$faculty_ids[] = intval($fac['user_id']);
-									}
-								}
-							}
-
-							// Mostrar cuestionarios: asignados directamente OR del profesor del nivel
-							$faculty_condition = '';
-							if (!empty($faculty_ids)) {
-								$faculty_list = implode(',', $faculty_ids);
-								$faculty_condition = " OR (ql.user_id IN ({$faculty_list}))";
-							}
-							
-							$qry = $conn->query("SELECT DISTINCT ql.* FROM quiz_list ql
-							    WHERE ql.id IN (SELECT quiz_id FROM quiz_student_list WHERE user_id = {$loginId})
-							    {$faculty_condition}
-							    ORDER BY ql.title ASC");
+							$qry = $conn->query("SELECT DISTINCT ql.* FROM quiz_list ql WHERE ({$quiz_visibility_condition}) ORDER BY ql.title ASC");
 							$i = 1;
 							if ($qry && $qry->num_rows > 0) {
 								while ($row = $qry->fetch_assoc()) {
@@ -134,15 +108,15 @@ include 'header_adminlte.php';
 												</button>
 												<ul class="dropdown-menu dropdown-menu-end">
 													<li>
-														<a class="dropdown-item" href="./answer_sheet.php?id=<?php echo $row['id'] ?>" title="Realizar prueba">
-															<i class="fa fa-pencil-alt me-2"></i> Probar Cuestionario
-														</a>
-													</li>
-													<li>
 														<a class="dropdown-item" href="./view_answer.php?id=<?php echo $row['id'] ?>&mode=study" title="Ver respuestas">
 															<i class="fa fa-eye me-2"></i> Estudiar
 														</a>
 													</li>
+													<li>
+														<a class="dropdown-item" href="./answer_sheet.php?id=<?php echo $row['id'] ?>" title="Realizar prueba">
+															<i class="fa fa-pencil-alt me-2"></i> Probar Cuestionario
+														</a>
+													</li>													
 												</ul>
 											</div>
 										</td>

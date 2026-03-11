@@ -15,9 +15,18 @@ if ($id < 1) {
     exit;
 }
 
-$exists = $conn->query("SELECT id FROM quiz_category WHERE id = {$id} LIMIT 1");
+$exists = $conn->query("SELECT id, created_by FROM quiz_category WHERE id = {$id} LIMIT 1");
 if (!$exists || $exists->num_rows === 0) {
     echo json_encode(array('status' => 0, 'msg' => 'La categoría no existe.'));
+    exit;
+}
+
+$cat_row = $exists->fetch_assoc();
+$created_by = intval($cat_row['created_by']);
+
+// Validación de permisos: solo admin o el creador puede eliminar
+if ($_SESSION['login_user_type'] == 2 && intval($_SESSION['login_id']) !== $created_by) {
+    echo json_encode(array('status' => 0, 'msg' => 'No tiene permisos para eliminar esta categoría.'));
     exit;
 }
 

@@ -274,7 +274,7 @@
           </li>
           <?php else: ?>
           <li class="nav-item">
-            <a href="student_dashboard.php" class="nav-link">
+            <a href="home.php" class="nav-link">
               <i class="nav-icon fa-solid fa-house"></i>
               <p>Inicio</p>
             </a>

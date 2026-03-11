@@ -1,6 +1,7 @@
 <?php
 include('auth.php');
 include('db_connect.php');
+include('student_scope.php');
 
 header('Content-Type: application/json');
 
@@ -29,14 +30,6 @@ if ($user_id !== intval($_SESSION['login_id'])) {
     exit;
 }
 
-$conn->query("CREATE TABLE IF NOT EXISTS evaluation_student_list (
-    id INT NOT NULL AUTO_INCREMENT,
-    evaluation_id INT NOT NULL,
-    user_id INT NOT NULL,
-    date_updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
-
 $conn->query("CREATE TABLE IF NOT EXISTS evaluation_history (
     id INT NOT NULL AUTO_INCREMENT,
     evaluation_id INT NOT NULL,
@@ -64,7 +57,9 @@ if ($has_history_column && $has_history_column->num_rows === 0) {
     $conn->query("ALTER TABLE evaluation_answers ADD COLUMN history_id INT NOT NULL DEFAULT 0 AFTER id");
 }
 
-$assigned = $conn->query("SELECT id FROM evaluation_student_list WHERE evaluation_id = {$evaluation_id} AND user_id = {$user_id} LIMIT 1");
+$scope = getStudentScope($conn, $user_id, 'q', 'e');
+$eval_visibility_condition = $scope['eval_visibility_condition'];
+$assigned = $conn->query("SELECT e.id FROM evaluation_list e WHERE e.id = {$evaluation_id} AND ({$eval_visibility_condition}) LIMIT 1");
 if (!$assigned || $assigned->num_rows === 0) {
     echo json_encode(array('status' => 0, 'msg' => 'No tiene permiso para rendir esta evaluación.'));
     exit;

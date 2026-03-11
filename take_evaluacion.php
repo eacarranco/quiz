@@ -1,6 +1,7 @@
 <?php
 include('auth.php');
 include('db_connect.php');
+include('student_scope.php');
 
 if ($_SESSION['login_user_type'] != 3) {
     header('Location: evaluacion.php');
@@ -13,16 +14,10 @@ if ($evaluation_id < 1) {
     exit;
 }
 
-$conn->query("CREATE TABLE IF NOT EXISTS evaluation_student_list (
-    id INT NOT NULL AUTO_INCREMENT,
-    evaluation_id INT NOT NULL,
-    user_id INT NOT NULL,
-    date_updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
-
 $student_id = intval($_SESSION['login_id']);
-$permit = $conn->query("SELECT id FROM evaluation_student_list WHERE evaluation_id = {$evaluation_id} AND user_id = {$student_id} LIMIT 1");
+$scope = getStudentScope($conn, $student_id, 'q', 'e');
+$eval_visibility_condition = $scope['eval_visibility_condition'];
+$permit = $conn->query("SELECT e.id FROM evaluation_list e WHERE e.id = {$evaluation_id} AND ({$eval_visibility_condition}) LIMIT 1");
 if (!$permit || $permit->num_rows === 0) {
     header('Location: student_evaluacion_list.php');
     exit;

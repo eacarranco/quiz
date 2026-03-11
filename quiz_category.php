@@ -13,11 +13,25 @@ $conn->query("CREATE TABLE IF NOT EXISTS quiz_category (
     id INT NOT NULL AUTO_INCREMENT,
     cat_name VARCHAR(150) NOT NULL,
     cat_descrip VARCHAR(200) DEFAULT NULL,
+    created_by INT NOT NULL DEFAULT 1,
     state BIT(1) NOT NULL DEFAULT b'1',
     PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 
-$qry = $conn->query("SELECT qc.id, qc.cat_name, qc.cat_descrip, qc.state, COUNT(ql.id) AS quiz_count FROM quiz_category qc LEFT JOIN quiz_list ql ON ql.quiz_cat_id = qc.id GROUP BY qc.id, qc.cat_name, qc.cat_descrip, qc.state ORDER BY qc.cat_name ASC");
+// Add created_by column if it doesn't exist
+$has_created_by = $conn->query("SHOW COLUMNS FROM quiz_category LIKE 'created_by'");
+if ($has_created_by && $has_created_by->num_rows === 0) {
+    $conn->query("ALTER TABLE quiz_category ADD COLUMN created_by INT NOT NULL DEFAULT 1 AFTER cat_descrip");
+}
+
+// Build query with access control
+$where_clause = '1=1';
+if (intval($_SESSION['login_user_type']) === 2) {
+    // Profesor: mostrar sus categorías + las creadas por admin
+    $where_clause = '(qc.created_by = ' . intval($_SESSION['login_id']) . ' OR qc.created_by IN (SELECT id FROM users WHERE user_type = 1))';
+}
+
+$qry = $conn->query("SELECT qc.id, qc.cat_name, qc.cat_descrip, qc.created_by, qc.state, COUNT(ql.id) AS quiz_count FROM quiz_category qc LEFT JOIN quiz_list ql ON ql.quiz_cat_id = qc.id WHERE {$where_clause} GROUP BY qc.id, qc.cat_name, qc.cat_descrip, qc.created_by, qc.state ORDER BY qc.cat_name ASC");
 
 include('header_adminlte.php');
 ?>

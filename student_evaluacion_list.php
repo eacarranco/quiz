@@ -1,6 +1,7 @@
 <?php
 include('auth.php');
 include('db_connect.php');
+include('student_scope.php');
 
 if ($_SESSION['login_user_type'] != 3) {
     header('Location: evaluacion.php');
@@ -49,7 +50,10 @@ $conn->query("CREATE TABLE IF NOT EXISTS evaluation_history (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 
 $student_id = intval($_SESSION['login_id']);
-$eval_qry = $conn->query("SELECT e.*, (SELECT d.value_type FROM evaluation_detail d WHERE d.evaluation_id = e.id ORDER BY d.id ASC LIMIT 1) AS eval_type FROM evaluation_list e INNER JOIN evaluation_student_list es ON es.evaluation_id = e.id WHERE es.user_id = {$student_id} ORDER BY e.id DESC");
+$scope = getStudentScope($conn, $student_id, 'q', 'e');
+$eval_visibility_condition = $scope['eval_visibility_condition'];
+
+$eval_qry = $conn->query("SELECT DISTINCT e.*, (SELECT d.value_type FROM evaluation_detail d WHERE d.evaluation_id = e.id ORDER BY d.id ASC LIMIT 1) AS eval_type FROM evaluation_list e WHERE ({$eval_visibility_condition}) ORDER BY e.id DESC");
 
 include('header_adminlte.php');
 ?>

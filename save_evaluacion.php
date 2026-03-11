@@ -48,7 +48,19 @@ $total_questions = isset($_POST['total_questions']) ? intval($_POST['total_quest
 $value_type = isset($_POST['value_type']) ? trim($_POST['value_type']) : '';
 $randomize_options = isset($_POST['randomize_options']) ? intval($_POST['randomize_options']) : 1;
 $rules_json = isset($_POST['rules_json']) ? $_POST['rules_json'] : '[]';
-$created_by = intval($_SESSION['login_id']);
+$created_by_param = isset($_POST['created_by']) ? intval($_POST['created_by']) : 0;
+
+// Si es admin, usa el profesor seleccionado; si es profesor, usa su ID
+if (intval($_SESSION['login_user_type']) === 1) {
+    $created_by = $created_by_param > 0 ? $created_by_param : 0;
+} else {
+    $created_by = intval($_SESSION['login_id']);
+}
+
+if ($created_by < 1) {
+    echo json_encode(array('status' => 0, 'msg' => 'Seleccione un profesor válido.'));
+    exit;
+}
 
 if ($randomize_options !== 0) {
     $randomize_options = 1;

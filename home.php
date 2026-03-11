@@ -1,6 +1,7 @@
 <?php
 include 'auth.php';
 include 'db_connect.php';
+include 'student_scope.php';
 $title = 'Inicio';
 include 'header_adminlte.php';
 
@@ -120,18 +121,22 @@ if ($user_type !== 3) {
         }
     }
 } else {
-    $assigned_quizzes = intval(($conn->query("SELECT COUNT(id) AS total FROM quiz_student_list WHERE user_id = {$user_id}")->fetch_assoc()['total']) ?? 0);
-    $quiz_attempts_total = intval(($conn->query("SELECT COUNT(id) AS total FROM history WHERE user_id = {$user_id}")->fetch_assoc()['total']) ?? 0);
-    $assigned_evaluations = intval(($conn->query("SELECT COUNT(id) AS total FROM evaluation_student_list WHERE user_id = {$user_id}")->fetch_assoc()['total']) ?? 0);
-    $evaluation_attempts_total = intval(($conn->query("SELECT COUNT(id) AS total FROM evaluation_history WHERE user_id = {$user_id}")->fetch_assoc()['total']) ?? 0);
+    $scope = getStudentScope($conn, $user_id, 'q', 'e');
+    $quiz_visibility_condition = $scope['quiz_visibility_condition'];
+    $eval_visibility_condition = $scope['eval_visibility_condition'];
 
-    $avg_eval_pct_qry = $conn->query("SELECT AVG((score / NULLIF(total_score,0)) * 100) AS avg_pct FROM evaluation_history WHERE user_id = {$user_id}");
+    $assigned_quizzes = intval(($conn->query("SELECT COUNT(DISTINCT q.id) AS total FROM quiz_list q WHERE ({$quiz_visibility_condition})")->fetch_assoc()['total']) ?? 0);
+    $quiz_attempts_total = intval(($conn->query("SELECT COUNT(h.id) AS total FROM history h INNER JOIN quiz_list q ON q.id = h.quiz_id WHERE h.user_id = {$user_id} AND ({$quiz_visibility_condition})")->fetch_assoc()['total']) ?? 0);
+    $assigned_evaluations = intval(($conn->query("SELECT COUNT(DISTINCT e.id) AS total FROM evaluation_list e WHERE ({$eval_visibility_condition})")->fetch_assoc()['total']) ?? 0);
+    $evaluation_attempts_total = intval(($conn->query("SELECT COUNT(eh.id) AS total FROM evaluation_history eh INNER JOIN evaluation_list e ON e.id = eh.evaluation_id WHERE eh.user_id = {$user_id} AND ({$eval_visibility_condition})")->fetch_assoc()['total']) ?? 0);
+
+    $avg_eval_pct_qry = $conn->query("SELECT AVG((eh.score / NULLIF(eh.total_score,0)) * 100) AS avg_pct FROM evaluation_history eh INNER JOIN evaluation_list e ON e.id = eh.evaluation_id WHERE eh.user_id = {$user_id} AND ({$eval_visibility_condition})");
     $avg_eval_pct = 0;
     if ($avg_eval_pct_qry && $avg_eval_pct_qry->num_rows > 0) {
         $avg_eval_pct = floatval($avg_eval_pct_qry->fetch_assoc()['avg_pct']);
     }
 
-    $best_eval_pct_qry = $conn->query("SELECT MAX((score / NULLIF(total_score,0)) * 100) AS best_pct FROM evaluation_history WHERE user_id = {$user_id}");
+    $best_eval_pct_qry = $conn->query("SELECT MAX((eh.score / NULLIF(eh.total_score,0)) * 100) AS best_pct FROM evaluation_history eh INNER JOIN evaluation_list e ON e.id = eh.evaluation_id WHERE eh.user_id = {$user_id} AND ({$eval_visibility_condition})");
     $best_eval_pct = 0;
     if ($best_eval_pct_qry && $best_eval_pct_qry->num_rows > 0) {
         $best_eval_pct = floatval($best_eval_pct_qry->fetch_assoc()['best_pct']);
@@ -140,12 +145,14 @@ if ($user_type !== 3) {
     $latest_eval_qry = $conn->query(
         "SELECT eh.evaluation_id, eh.score, eh.total_score
          FROM evaluation_history eh
+            INNER JOIN evaluation_list e ON e.id = eh.evaluation_id
          INNER JOIN (
             SELECT evaluation_id, MAX(id) AS max_id
             FROM evaluation_history
             WHERE user_id = {$user_id}
             GROUP BY evaluation_id
-         ) x ON x.max_id = eh.id"
+            ) x ON x.max_id = eh.id
+            WHERE ({$eval_visibility_condition})"
     );
 
     $passed_count = 0;
@@ -170,7 +177,7 @@ if ($user_type !== 3) {
         "SELECT q.title, COUNT(h.id) AS total
          FROM history h
          INNER JOIN quiz_list q ON q.id = h.quiz_id
-         WHERE h.user_id = {$user_id}
+            WHERE h.user_id = {$user_id} AND ({$quiz_visibility_condition})
          GROUP BY q.id, q.title
          ORDER BY total DESC, q.title ASC
          LIMIT 6"
@@ -184,10 +191,11 @@ if ($user_type !== 3) {
 
     $quiz_map = array();
     $quiz_daily_qry = $conn->query(
-        "SELECT DATE(date_updated) AS day_key, COUNT(id) AS total
-         FROM history
-         WHERE user_id = {$user_id} AND DATE(date_updated) >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
-         GROUP BY DATE(date_updated)"
+           "SELECT DATE(h.date_updated) AS day_key, COUNT(h.id) AS total
+            FROM history h
+            INNER JOIN quiz_list q ON q.id = h.quiz_id
+            WHERE h.user_id = {$user_id} AND ({$quiz_visibility_condition}) AND DATE(h.date_updated) >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
+            GROUP BY DATE(h.date_updated)"
     );
     if ($quiz_daily_qry && $quiz_daily_qry->num_rows > 0) {
         while ($row = $quiz_daily_qry->fetch_assoc()) {
@@ -197,10 +205,11 @@ if ($user_type !== 3) {
 
     $eval_map = array();
     $eval_daily_qry = $conn->query(
-        "SELECT DATE(date_updated) AS day_key, COUNT(id) AS total
-         FROM evaluation_history
-         WHERE user_id = {$user_id} AND DATE(date_updated) >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
-         GROUP BY DATE(date_updated)"
+           "SELECT DATE(eh.date_updated) AS day_key, COUNT(eh.id) AS total
+            FROM evaluation_history eh
+            INNER JOIN evaluation_list e ON e.id = eh.evaluation_id
+            WHERE eh.user_id = {$user_id} AND ({$eval_visibility_condition}) AND DATE(eh.date_updated) >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
+            GROUP BY DATE(eh.date_updated)"
     );
     if ($eval_daily_qry && $eval_daily_qry->num_rows > 0) {
         while ($row = $eval_daily_qry->fetch_assoc()) {

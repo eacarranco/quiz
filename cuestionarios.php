@@ -52,7 +52,7 @@ include('header_adminlte.php');
                                     <tr>
                                         <td style="text-align: center;"><strong><?php echo $i++; ?></strong></td>
                                         <td><?php echo htmlspecialchars($row['title']); ?></td>                                        
-                                        <td style="text-align: center;"><span class="badge bg-secondary"><?php echo htmlspecialchars($row['category_name'] ? $row['category_name'] : 'Sin categoría'); ?></span></td>                                                                                
+                                        <td><?php echo htmlspecialchars($row['category_name'] ? $row['category_name'] : 'Sin categoría'); ?></td>                                                                                
                                         <td style="text-align: center;"><span class="badge bg-info"><?php echo $count; ?></span></td>
                                         <?php if ($_SESSION['login_user_type'] != 3): ?>
                                         <td style="text-align: center;">
@@ -109,7 +109,12 @@ include('header_adminlte.php');
                     <input type="hidden" name="id" id="quiz_id" value="">
                     <?php
                     $quiz_categories = array();
-                    $cat_qry = $conn->query("SELECT id, cat_name FROM quiz_category WHERE state = 1 ORDER BY cat_name ASC");
+                    $cat_where = '1=1';
+                    if ($_SESSION['login_user_type'] == 2) {
+                        // Profesor: mostrar sus categorías + las creadas por admin
+                        $cat_where = '(qc.created_by = ' . intval($_SESSION['login_id']) . ' OR qc.created_by IN (SELECT id FROM users WHERE user_type = 1))';
+                    }
+                    $cat_qry = $conn->query("SELECT qc.id, qc.cat_name FROM quiz_category qc WHERE qc.state = 1 AND {$cat_where} ORDER BY qc.cat_name ASC");
                     if ($cat_qry && $cat_qry->num_rows > 0) {
                         while ($cat_row = $cat_qry->fetch_assoc()) {
                             $quiz_categories[] = $cat_row;

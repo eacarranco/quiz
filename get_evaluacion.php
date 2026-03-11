@@ -25,7 +25,7 @@ if (intval($_SESSION['login_user_type']) === 2) {
     $where_owner = ' AND created_by = ' . intval($_SESSION['login_id']) . ' ';
 }
 
-$eval_qry = $conn->query("SELECT id, eval_name, eval_description, total_questions, randomize_options FROM evaluation_list WHERE id = {$id} {$where_owner} LIMIT 1");
+$eval_qry = $conn->query("SELECT id, eval_name, eval_description, total_questions, randomize_options, created_by FROM evaluation_list WHERE id = {$id} {$where_owner} LIMIT 1");
 if (!$eval_qry || $eval_qry->num_rows === 0) {
     echo json_encode(array('status' => 0, 'msg' => 'Evaluación no encontrada o sin permisos.'));
     exit;
@@ -35,6 +35,7 @@ $evaluation = $eval_qry->fetch_assoc();
 $rules = array();
 $value_type = 'cantidad';
 
+// Load evaluation details and determine value_type
 $det_qry = $conn->query("SELECT quiz_cat_id, value_type, value_num, question_count FROM evaluation_detail WHERE evaluation_id = {$id} ORDER BY id ASC");
 if ($det_qry && $det_qry->num_rows > 0) {
     while ($row = $det_qry->fetch_assoc()) {
@@ -50,14 +51,18 @@ if ($det_qry && $det_qry->num_rows > 0) {
     }
 }
 
-echo json_encode(array(
+// Prepare response with all fields from database
+$response = array(
     'status' => 1,
     'id' => intval($evaluation['id']),
-    'eval_name' => $evaluation['eval_name'],
-    'eval_description' => $evaluation['eval_description'],
+    'eval_name' => isset($evaluation['eval_name']) ? $evaluation['eval_name'] : '',
+    'eval_description' => isset($evaluation['eval_description']) ? $evaluation['eval_description'] : '',
     'total_questions' => intval($evaluation['total_questions']),
     'randomize_options' => intval($evaluation['randomize_options']),
+    'created_by' => intval($evaluation['created_by']),
     'value_type' => $value_type,
     'rules' => $rules
-));
+);
+
+echo json_encode($response);
 exit;

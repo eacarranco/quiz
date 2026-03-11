@@ -49,9 +49,18 @@ if ($exists && $exists->num_rows > 0) {
 }
 
 if ($id > 0) {
-    $check = $conn->query("SELECT id FROM quiz_category WHERE id = {$id} LIMIT 1");
+    $check = $conn->query("SELECT id, created_by FROM quiz_category WHERE id = {$id} LIMIT 1");
     if (!$check || $check->num_rows === 0) {
         echo json_encode(array('status' => 0, 'msg' => 'La categoría a editar no existe.'));
+        exit;
+    }
+
+    $check_row = $check->fetch_assoc();
+    $created_by = intval($check_row['created_by']);
+
+    // Validación de permisos: solo admin o el creador puede editar
+    if ($_SESSION['login_user_type'] == 2 && intval($_SESSION['login_id']) !== $created_by) {
+        echo json_encode(array('status' => 0, 'msg' => 'No tiene permisos para editar esta categoría.'));
         exit;
     }
 
@@ -59,7 +68,8 @@ if ($id > 0) {
     $saved_id = $id;
     $ok_msg = 'Categoría actualizada';
 } else {
-    $save = $conn->query("INSERT INTO quiz_category (cat_name, cat_descrip, state) VALUES ('{$cat_name}', '{$cat_descrip}', {$state})");
+    $created_by = intval($_SESSION['login_id']);
+    $save = $conn->query("INSERT INTO quiz_category (cat_name, cat_descrip, created_by, state) VALUES ('{$cat_name}', '{$cat_descrip}', {$created_by}, {$state})");
     $saved_id = intval($conn->insert_id);
     $ok_msg = 'Categoría creada';
 }

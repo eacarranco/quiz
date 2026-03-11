@@ -57,10 +57,6 @@ try {
         throw new Exception('No se pudo eliminar el historial de evaluación.');
     }
 
-    if (!$conn->query("DELETE FROM evaluation_student_list WHERE evaluation_id = {$id}")) {
-        throw new Exception('No se pudo eliminar la asignación de estudiantes.');
-    }
-
     if (!$conn->query("DELETE FROM evaluation_detail WHERE evaluation_id = {$id}")) {
         throw new Exception('No se pudo eliminar el detalle de la evaluación.');
     }
