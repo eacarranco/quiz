@@ -1,14 +1,15 @@
 
+<?php 
+	session_start();
+	if(isset($_SESSION['login_id'])){
+		header('Location:home.php');
+		exit();
+	}
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
 	<?php include('header.php') ?>
-	<?php 
-	session_start();
-	if(isset($_SESSION['login_id'])){
-		header('Location:home.php');
-	}
-	?>
 	<title>Iniciar Sesión | Sistema de Cuestionarios</title>
 	<style>
 		html, body {

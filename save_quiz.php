@@ -20,6 +20,7 @@ $user_id = isset($_POST['user_id']) ? intval($_POST['user_id']) : 0;
 $quiz_cat_id = isset($_POST['quiz_cat_id']) ? intval($_POST['quiz_cat_id']) : 0;
 $qpoints = isset($_POST['qpoints']) ? intval($_POST['qpoints']) : 0;
 $randomize_options = isset($_POST['randomize_options']) ? intval($_POST['randomize_options']) : 0;
+$level_id = isset($_POST['level_id']) ? intval($_POST['level_id']) : 0;
 
 if ($title === '') {
     echo json_encode(array('status' => 0, 'msg' => 'Ingrese el título del cuestionario.'));
@@ -75,7 +76,7 @@ if ($id > 0) {
         exit;
     }
 
-    $save_sql = "UPDATE quiz_list SET title = '{$title}', qpoints = {$qpoints}, randomize_options = {$randomize_options}, user_id = {$user_id}, quiz_cat_id = {$quiz_cat_id} WHERE id = {$id}";
+    $save_sql = "UPDATE quiz_list SET title = '{$title}', qpoints = {$qpoints}, randomize_options = {$randomize_options}, user_id = {$user_id}, quiz_cat_id = {$quiz_cat_id}, level_id = " . ($level_id > 0 ? $level_id : 'NULL') . " WHERE id = {$id}";
     $save = $conn->query($save_sql);
 
     if ($save) {
@@ -91,7 +92,7 @@ if ($id > 0) {
     exit;
 }
 
-$insert_sql = "INSERT INTO quiz_list (title, qpoints, randomize_options, user_id, quiz_cat_id) VALUES ('{$title}', {$qpoints}, {$randomize_options}, {$user_id}, {$quiz_cat_id})";
+$insert_sql = "INSERT INTO quiz_list (title, qpoints, randomize_options, user_id, quiz_cat_id, level_id) VALUES ('{$title}', {$qpoints}, {$randomize_options}, {$user_id}, {$quiz_cat_id}, " . ($level_id > 0 ? $level_id : 'NULL') . ")";
 $insert = $conn->query($insert_sql);
 
 if ($insert) {

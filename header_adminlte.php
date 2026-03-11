@@ -166,7 +166,7 @@
 
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">          
-          <a class="nav-link" href="logout.php" title="Cerrar sesión"><small><?php echo isset($_SESSION['login_user_type']) ? ($_SESSION['login_user_type'] == 1 ? 'Administrador' : 'Profesor') : ''; ?></small> <i class="fa-solid fa-right-from-bracket"></i></a>
+          <a class="nav-link" href="logout.php" title="Cerrar sesión"><small><?php echo isset($_SESSION['login_user_type']) ? ($_SESSION['login_user_type'] == 1 ? 'Administrador' : ($_SESSION['login_user_type'] == 2 ? 'Profesor' : (isset($_SESSION['login_name']) ? $_SESSION['login_name'] : 'Estudiante'))) : ''; ?></small> <i class="fa-solid fa-right-from-bracket"></i></a>
         </li>
       </ul>
     </div>
@@ -273,6 +273,12 @@
             </a>
           </li>
           <?php else: ?>
+          <li class="nav-item">
+            <a href="student_dashboard.php" class="nav-link">
+              <i class="nav-icon fa-solid fa-house"></i>
+              <p>Inicio</p>
+            </a>
+          </li>
           <li class="nav-item">
             <a href="student_quiz_list.php" class="nav-link">
               <i class="nav-icon fa-solid fa-list-check"></i>

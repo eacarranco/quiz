@@ -1,0 +1,8 @@
+Options -Indexes
+
+DirectoryIndex login.php
+
+RewriteEngine On
+
+# Internally rewrite root access to login.php
+RewriteRule ^$ login.php [L]

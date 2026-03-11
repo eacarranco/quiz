@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Mar 10, 2026 at 10:13 PM
+-- Generation Time: Mar 11, 2026 at 04:06 PM
 -- Server version: 8.4.3
 -- PHP Version: 8.3.16
 
@@ -132,7 +132,6 @@ CREATE TABLE `faculty` (
 --
 
 INSERT INTO `faculty` (`id`, `user_id`, `subject`, `date_updated`) VALUES
-(4, 19, 'Multidisciplinario', '2026-03-10 10:10:14'),
 (5, 21, 'Dinarp', '2026-03-10 16:37:51'),
 (6, 22, 'Psico', '2026-03-10 16:39:03');
 
@@ -154,9 +153,8 @@ CREATE TABLE `faculty_levels` (
 --
 
 INSERT INTO `faculty_levels` (`id`, `faculty_id`, `level_id`, `date_updated`) VALUES
-(3, 6, 1, '2026-03-10 16:52:40'),
-(6, 5, 1, '2026-03-10 17:00:54'),
-(7, 4, 1, '2026-03-10 17:01:03');
+(11, 5, 1, '2026-03-11 10:56:08'),
+(12, 6, 195, '2026-03-11 10:56:33');
 
 -- --------------------------------------------------------
 
@@ -191,8 +189,9 @@ CREATE TABLE `levels` (
 --
 
 INSERT INTO `levels` (`id`, `level_name`, `state`, `date_updated`) VALUES
-(1, '1A-PROSAS', 1, '2026-03-10 16:57:37'),
-(182, 'Default', 1, '2026-03-10 17:11:58');
+(1, 'Nivel-PROSAS', 1, '2026-03-11 10:49:40'),
+(182, 'Default', 1, '2026-03-10 17:11:58'),
+(195, 'Nivel-MRUEDA', 1, '2026-03-11 10:49:34');
 
 -- --------------------------------------------------------
 
@@ -951,15 +950,16 @@ CREATE TABLE `quiz_list` (
   `randomize_options` tinyint(1) NOT NULL DEFAULT '1',
   `user_id` int NOT NULL,
   `date_updated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `quiz_cat_id` int NOT NULL
+  `quiz_cat_id` int NOT NULL,
+  `level_id` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `quiz_list`
 --
 
-INSERT INTO `quiz_list` (`id`, `title`, `qpoints`, `randomize_options`, `user_id`, `date_updated`, `quiz_cat_id`) VALUES
-(1, 'Competencias', 1, 0, 22, '2026-03-10 16:50:40', 1);
+INSERT INTO `quiz_list` (`id`, `title`, `qpoints`, `randomize_options`, `user_id`, `date_updated`, `quiz_cat_id`, `level_id`) VALUES
+(1, 'Competencias', 1, 0, 22, '2026-03-11 10:56:59', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -993,8 +993,8 @@ CREATE TABLE `students` (
 --
 
 INSERT INTO `students` (`id`, `user_id`, `level_id`, `level_section`, `date_updated`) VALUES
-(9, 20, 1, '1A-PROSAS', '2026-03-10 17:11:27'),
-(10, 23, 1, '1A-PROSAS', '2026-03-10 16:58:30');
+(9, 20, 195, 'Nivel-MRUEDA', '2026-03-11 10:50:03'),
+(10, 23, 1, 'Nivel-PROSAS', '2026-03-11 10:50:11');
 
 -- --------------------------------------------------------
 
@@ -1018,10 +1018,9 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `name`, `user_type`, `username`, `password`, `status`, `date_updated`) VALUES
 (1, 'Administrator', 1, 'admin', 'admin123', 1, '2020-09-07 09:10:49'),
-(19, 'Gavino Carranco', 2, 'gcarranco', 'admin123', 1, '2026-03-10 10:16:02'),
 (20, 'Maritza Rueda', 3, 'm1', 'm1', 1, '2026-03-10 16:41:26'),
-(21, 'Patricio Rosas', 2, 'prosas', '@Patrici0', 1, '2026-03-10 16:37:51'),
-(22, 'Maritza Rueda', 2, 'maritza', 'maritza', 1, '2026-03-10 16:39:03'),
+(21, 'Patricio Rosas', 2, 'dinarp', '@Dinarp', 1, '2026-03-11 10:56:08'),
+(22, 'Maritza Rueda', 2, 'psico', '@Psico', 1, '2026-03-11 10:56:33'),
 (23, 'Patricio Rosas', 3, 'p1', 'p1', 1, '2026-03-10 16:41:43');
 
 --
@@ -1183,7 +1182,7 @@ ALTER TABLE `faculty`
 -- AUTO_INCREMENT for table `faculty_levels`
 --
 ALTER TABLE `faculty_levels`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `history`
@@ -1195,7 +1194,7 @@ ALTER TABLE `history`
 -- AUTO_INCREMENT for table `levels`
 --
 ALTER TABLE `levels`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=190;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=233;
 
 --
 -- AUTO_INCREMENT for table `questions`

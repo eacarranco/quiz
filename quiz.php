@@ -165,6 +165,22 @@ include('header_adminlte.php');
                         <input type="number" class="form-control" id="quiz_qpoints" name="qpoints" min="1" step="1" value="1" required>
                     </div>
 
+                    <div class="mb-3">
+                        <label for="quiz_level_id">Nivel (visible para estudiantes del nivel)</label>
+                        <select class="form-select" id="quiz_level_id" name="level_id">
+                            <option value="">-- Sin restricción de nivel --</option>
+                            <?php
+                            $lvl_qry = $conn->query('SELECT id, level_name FROM levels WHERE state = 1 ORDER BY level_name ASC');
+                            if ($lvl_qry && $lvl_qry->num_rows > 0) {
+                                while ($lvl = $lvl_qry->fetch_assoc()) {
+                                    echo '<option value="' . intval($lvl['id']) . '">' . htmlspecialchars($lvl['level_name']) . '</option>';
+                                }
+                            }
+                            ?>
+                        </select>
+                        <small class="text-muted">Si selecciona un nivel, solo los estudiantes de ese nivel verán este cuestionario.</small>
+                    </div>
+
                     <?php if ($_SESSION['login_user_type'] == 1): ?>
                         <div class="mb-3">
                             <label for="quiz_user_id">Profesor</label>
@@ -326,6 +342,7 @@ include('header_adminlte.php');
                         $('#quiz_cat_id').val(resp.quiz_cat_id || '');
                         $('#quiz_qpoints').val(resp.qpoints || 1);
                         $('#quiz_user_id').val(resp.user_id || '');
+                        $('#quiz_level_id').val(resp.level_id || '');
                         if (String(resp.randomize_options) === '1') {
                             $('#randomize_yes').prop('checked', true);
                         } else {
@@ -511,6 +528,8 @@ include('header_adminlte.php');
                             document.getElementById('quiz_qpoints').value = resp.qpoints || 1;
                             var userEl = document.getElementById('quiz_user_id');
                             if (userEl) userEl.value = resp.user_id || '';
+                            var levelEl = document.getElementById('quiz_level_id');
+                            if (levelEl) levelEl.value = resp.level_id || '';
                             document.getElementById('randomize_yes').checked = String(resp.randomize_options) === '1';
                             document.getElementById('randomize_no').checked = String(resp.randomize_options) !== '1';
                             document.getElementById('quizModalTitle').textContent = 'Editar Cuestionario';

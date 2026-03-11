@@ -74,9 +74,40 @@ include 'header_adminlte.php';
 						</thead>
 						<tbody>
 							<?php
-							$qry = $conn->query("SELECT * from  quiz_list where id in  (SELECT quiz_id FROM quiz_student_list where user_id ='" . $_SESSION['login_id'] . "' ) order by title asc ");
+							// Obtener el level_id del estudiante actual
+							$loginId = intval($_SESSION['login_id']);
+							$st_row = $conn->query("SELECT level_id FROM students WHERE user_id = {$loginId} LIMIT 1");
+							$student_level_id = ($st_row && $st_row->num_rows > 0) ? intval($st_row->fetch_assoc()['level_id']) : 0;
+
+							// Obtener los profesores (user_id) asignados al nivel del estudiante
+							$faculty_ids = array();
+							if ($student_level_id > 0) {
+								$fac_qry = $conn->query("
+									SELECT DISTINCT f.user_id
+									FROM faculty f
+									INNER JOIN faculty_levels fl ON f.id = fl.faculty_id
+									WHERE fl.level_id = {$student_level_id}
+								");
+								if ($fac_qry && $fac_qry->num_rows > 0) {
+									while ($fac = $fac_qry->fetch_assoc()) {
+										$faculty_ids[] = intval($fac['user_id']);
+									}
+								}
+							}
+
+							// Mostrar cuestionarios: asignados directamente OR del profesor del nivel
+							$faculty_condition = '';
+							if (!empty($faculty_ids)) {
+								$faculty_list = implode(',', $faculty_ids);
+								$faculty_condition = " OR (ql.user_id IN ({$faculty_list}))";
+							}
+							
+							$qry = $conn->query("SELECT DISTINCT ql.* FROM quiz_list ql
+							    WHERE ql.id IN (SELECT quiz_id FROM quiz_student_list WHERE user_id = {$loginId})
+							    {$faculty_condition}
+							    ORDER BY ql.title ASC");
 							$i = 1;
-							if ($qry->num_rows > 0) {
+							if ($qry && $qry->num_rows > 0) {
 								while ($row = $qry->fetch_assoc()) {
 									$status = $conn->query("SELECT max(score) as score, (select count(*) from questions where qid=quiz_id) as total_score from history where quiz_id = '" . $row['id'] . "' and user_id ='" . $_SESSION['login_id'] . "' group by quiz_id");
 									$hist = $status->fetch_array();
@@ -97,10 +128,23 @@ include 'header_adminlte.php';
 											?>
 										</td>
 										<td style="text-align: center; vertical-align: middle;">
-											<a class="btn btn-sm btn-primary" href="./answer_sheet.php?id=<?php echo $row['id'] ?>"
-												title="Realizar prueba"><i class="fa fa-pencil-alt"></i> Prueba</a>
-											<a class="btn btn-sm btn-info" href="./view_answer.php?id=<?php echo $row['id'] ?>&mode=study"
-												title="Ver respuestas"><i class="fa fa-eye"></i> Estudiar</a>
+											<div class="dropdown d-inline-block">
+												<button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+													<i class="fa fa-ellipsis-v"></i>
+												</button>
+												<ul class="dropdown-menu dropdown-menu-end">
+													<li>
+														<a class="dropdown-item" href="./answer_sheet.php?id=<?php echo $row['id'] ?>" title="Realizar prueba">
+															<i class="fa fa-pencil-alt me-2"></i> Probar Cuestionario
+														</a>
+													</li>
+													<li>
+														<a class="dropdown-item" href="./view_answer.php?id=<?php echo $row['id'] ?>&mode=study" title="Ver respuestas">
+															<i class="fa fa-eye me-2"></i> Estudiar
+														</a>
+													</li>
+												</ul>
+											</div>
 										</td>
 									</tr>
 									<?php
