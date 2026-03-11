@@ -24,11 +24,12 @@ include('header_adminlte.php');
                         <thead>
                             <tr>
                                 <th style="width: 5%; text-align: center;">#</th>
-                                <th style="width: 25%;">Título</th>                                
-                                <th style="width: 25%; text-align: center;">Categoría</th>
+                                <th style="width: 22%;">Título</th>
+                                <th style="width: 20%; text-align: center;">Categoría</th>
+                                <th style="width: 16%; text-align: center;">Orden de respuestas</th>
                                 <th style="width: 12%; text-align: center;">Preguntas</th>
                                 <?php if ($_SESSION['login_user_type'] != 3): ?>
-                                <th style="width: 12%; text-align: center;">Opciones</th>
+                                <th style="width: 15%; text-align: center;">Opciones</th>
                                 <?php endif; ?>
                             </tr>
                         </thead>
@@ -51,8 +52,15 @@ include('header_adminlte.php');
                                     ?>
                                     <tr>
                                         <td style="text-align: center;"><strong><?php echo $i++; ?></strong></td>
-                                        <td><?php echo htmlspecialchars($row['title']); ?></td>                                        
-                                        <td><?php echo htmlspecialchars($row['category_name'] ? $row['category_name'] : 'Sin categoría'); ?></td>                                                                                
+                                        <td><?php echo htmlspecialchars($row['title']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['category_name'] ? $row['category_name'] : 'Sin categoría'); ?></td>
+                                        <td style="text-align: center;">
+                                            <?php if (intval($row['randomize_options']) === 1): ?>
+                                                <span class="badge bg-success">Aleatorias</span>
+                                            <?php else: ?>
+                                                <span class="badge bg-secondary">Orden ingresado</span>
+                                            <?php endif; ?>
+                                        </td>
                                         <td style="text-align: center;"><span class="badge bg-info"><?php echo $count; ?></span></td>
                                         <?php if ($_SESSION['login_user_type'] != 3): ?>
                                         <td style="text-align: center;">

@@ -274,7 +274,7 @@ include('header_adminlte.php');
                 info: true,
                 autoWidth: false,
                 responsive: false,
-                order: [[0, 'desc']],
+                order: [[0, 'asc']],
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json'
                 }
