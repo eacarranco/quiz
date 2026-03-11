@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Mar 11, 2026 at 05:22 PM
+-- Generation Time: Mar 11, 2026 at 05:38 PM
 -- Server version: 8.4.3
 -- PHP Version: 8.3.16
 
@@ -153,8 +153,8 @@ CREATE TABLE `faculty_levels` (
 --
 
 INSERT INTO `faculty_levels` (`id`, `faculty_id`, `level_id`, `date_updated`) VALUES
-(14, 6, 195, '2026-03-11 12:16:25'),
-(15, 5, 1, '2026-03-11 12:16:32');
+(16, 6, 195, '2026-03-11 12:24:02'),
+(17, 5, 1, '2026-03-11 12:24:10');
 
 -- --------------------------------------------------------
 
@@ -936,7 +936,8 @@ CREATE TABLE `quiz_category` (
 --
 
 INSERT INTO `quiz_category` (`id`, `cat_name`, `cat_descrip`, `created_by`, `state`) VALUES
-(1, 'Psicométricas', 'Preguntas evaluación psicométrica.', 22, b'1');
+(1, 'Psicométricas', 'Preguntas evaluación psicométrica.', 22, b'1'),
+(4, 'Conocimientos', 'Conocimientos Técnicos', 22, b'1');
 
 -- --------------------------------------------------------
 
@@ -1019,10 +1020,10 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `name`, `user_type`, `username`, `password`, `status`, `date_updated`) VALUES
 (1, 'Administrator', 1, 'admin', 'admin123', 1, '2020-09-07 09:10:49'),
-(20, 'Maritza Rueda', 3, 'm1', 'm1', 1, '2026-03-10 16:41:26'),
-(21, 'Patricio Rosas', 2, 'adminprosas', 'prosas', 1, '2026-03-11 12:16:32'),
-(22, 'Maritza Rueda', 2, 'adminmrueda', 'mrueda', 1, '2026-03-11 12:16:25'),
-(23, 'Patricio Rosas', 3, 'p1', 'p1', 1, '2026-03-10 16:41:43');
+(20, 'Estudiante Maritza Rueda', 3, 'm1', 'm1', 1, '2026-03-11 12:23:43'),
+(21, 'Prof. Patricio Rosas', 2, 'adminprosas', 'prosas', 1, '2026-03-11 12:24:10'),
+(22, 'Prof. Maritza Rueda', 2, 'adminmrueda', 'mrueda', 1, '2026-03-11 12:24:02'),
+(23, 'Estudiante Patricio Rosas', 3, 'p1', 'p1', 1, '2026-03-11 12:23:51');
 
 --
 -- Indexes for dumped tables
@@ -1147,25 +1148,25 @@ ALTER TABLE `answers`
 -- AUTO_INCREMENT for table `evaluation_answers`
 --
 ALTER TABLE `evaluation_answers`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `evaluation_detail`
 --
 ALTER TABLE `evaluation_detail`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT for table `evaluation_history`
 --
 ALTER TABLE `evaluation_history`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `evaluation_list`
 --
 ALTER TABLE `evaluation_list`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `evaluation_student_list`
@@ -1183,7 +1184,7 @@ ALTER TABLE `faculty`
 -- AUTO_INCREMENT for table `faculty_levels`
 --
 ALTER TABLE `faculty_levels`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `history`
@@ -1195,7 +1196,7 @@ ALTER TABLE `history`
 -- AUTO_INCREMENT for table `levels`
 --
 ALTER TABLE `levels`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=252;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=266;
 
 --
 -- AUTO_INCREMENT for table `questions`
@@ -1213,13 +1214,13 @@ ALTER TABLE `question_opt`
 -- AUTO_INCREMENT for table `quiz_category`
 --
 ALTER TABLE `quiz_category`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `quiz_list`
 --
 ALTER TABLE `quiz_list`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `quiz_student_list`
