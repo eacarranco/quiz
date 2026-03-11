@@ -136,9 +136,9 @@ include('header_adminlte.php');
                     $default_quiz_user_id = intval($_SESSION['login_id']);
                     ?>
                     <div class="form-group mb-3">
-                        <label for="quiz_user_id">Usuario</label>
+                        <label for="quiz_user_id">Profesor</label>
                         <select name="user_id" id="quiz_user_id" class="form-select" data-default="<?php echo $default_quiz_user_id; ?>">
-                            <option value="">Seleccione usuario</option>
+                            <option value="">Seleccione profesor</option>
                             <?php foreach ($quiz_users as $usr): ?>
                                 <option value="<?php echo intval($usr['id']); ?>" <?php echo intval($usr['id']) === $default_quiz_user_id ? 'selected' : ''; ?>>
                                     <?php echo htmlspecialchars($usr['name']); ?>
@@ -225,7 +225,7 @@ function initCuestionariosPage() {
     }
 
     if ($.fn.dataTable) {
-        $('#table_cuestionarios').DataTable({
+        var dtCuestionarios = $('#table_cuestionarios').DataTable({
             paging: true,
             lengthChange: true,
             searching: true,
@@ -238,6 +238,16 @@ function initCuestionariosPage() {
                 url: 'https://cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json'
             }
         });
+
+        // Recalcula la columna # en cada draw para mantener orden correlativo.
+        dtCuestionarios.on('draw.dt', function () {
+            var pageInfo = dtCuestionarios.page.info();
+            dtCuestionarios.column(0, { page: 'current' }).nodes().each(function (cell, i) {
+                cell.innerHTML = '<strong>' + (pageInfo.start + i + 1) + '</strong>';
+            });
+        });
+
+        dtCuestionarios.draw(false);
     }
 
     $(document).off('click', '#new_quiz').on('click', '#new_quiz', function () {

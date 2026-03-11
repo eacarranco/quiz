@@ -58,19 +58,21 @@ include 'header_adminlte.php';
 				<div class="table-responsive-wrapper">
 					<table class="table table-bordered table-striped table-hover" id='table'>
 						<colgroup>
-							<col width="10%">
-							<col width="30%">
+							<col width="8%">
+							<col width="28%">
+							<col width="22%">
+							<col width="18%">
 							<col width="20%">
-							<col width="20%">
-							<col width="20%">
+							<col width="15%">
 						</colgroup>
 						<thead>
 							<tr>
-								<th style="width: 10%; text-align: center;">#</th>
-								<th style="width: 30%;">Cuestionario</th>
-								<th style="width: 20%; text-align: center;">Mejor Calificación</th>
-								<th style="width: 20%; text-align: center;">Estado</th>
-								<th style="width: 20%; text-align: center;">Acción</th>
+								<th style="width: 8%; text-align: center;">#</th>
+								<th style="width: 28%;">Cuestionario</th>
+								<th style="width: 22%;">Categoría</th>
+								<th style="width: 18%; text-align: center;">Mejor calificación</th>
+								<th style="width: 20%; text-align: center;">Número de Preguntas</th>
+								<th style="width: 15%; text-align: center;">Opciones</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -79,7 +81,7 @@ include 'header_adminlte.php';
 							$scope = getStudentScope($conn, $loginId, 'ql', 'e');
 							$quiz_visibility_condition = $scope['quiz_visibility_condition'];
 
-							$qry = $conn->query("SELECT DISTINCT ql.* FROM quiz_list ql WHERE ({$quiz_visibility_condition}) ORDER BY ql.title ASC");
+							$qry = $conn->query("SELECT DISTINCT ql.*, qc.cat_name AS category_name, (SELECT COUNT(*) FROM questions qq WHERE qq.qid = ql.id) AS question_count FROM quiz_list ql LEFT JOIN quiz_category qc ON qc.id = ql.quiz_cat_id WHERE ({$quiz_visibility_condition}) ORDER BY ql.title ASC");
 							$i = 1;
 							if ($qry && $qry->num_rows > 0) {
 								while ($row = $qry->fetch_assoc()) {
@@ -87,19 +89,14 @@ include 'header_adminlte.php';
 									$hist = $status->fetch_array();
 									?>
 									<tr>
-										<td style="text-align: center; vertical-align: middle;"><?php echo $i++ ?></td>
+										<td style="text-align: center; vertical-align: middle;"><strong><?php echo $i++; ?></strong></td>
 										<td style="vertical-align: middle;"><?php echo $row['title'] ?></td>
+										<td style="vertical-align: middle;"><?php echo htmlspecialchars($row['category_name'] ? $row['category_name'] : 'Sin categoría') ?></td>
 										<td style="text-align: center; vertical-align: middle;"><span
 												class="badge bg-info"><?php echo $status->num_rows > 0 ? $hist['score'] . '/' . $hist['total_score'] : 'No realizado' ?></span>
 										</td>
 										<td style="text-align: center; vertical-align: middle;">
-											<?php
-											if ($status->num_rows > 0) {
-												echo '<span class="badge bg-success"><i class="fa fa-check"></i> Realizado</span>';
-											} else {
-												echo '<span class="badge bg-warning"><i class="fa fa-clock-o"></i> Pendiente</span>';
-											}
-											?>
+											<span class="badge bg-primary"><?php echo intval($row['question_count']); ?></span>
 										</td>
 										<td style="text-align: center; vertical-align: middle;">
 											<div class="dropdown d-inline-block">
@@ -141,7 +138,7 @@ include 'header_adminlte.php';
 		if ($.fn.dataTable.isDataTable('#table')) {
 			$('#table').DataTable().destroy();
 		}
-		$('#table').DataTable({
+		var dtStudentQuiz = $('#table').DataTable({
 			"paging": true,
 			"lengthChange": true,
 			"searching": true,
@@ -149,6 +146,9 @@ include 'header_adminlte.php';
 			"info": true,
 			"autoWidth": false,
 			"responsive": false,
+			"columnDefs": [
+				{ "targets": 0, "orderable": false, "searchable": false }
+			],
 			"order": [[1, "asc"]],
 			"pageLength": 10,
 			"language": {
@@ -160,6 +160,15 @@ include 'header_adminlte.php';
 				$('#table').css('min-width', minWidth);
 			}
 		});
+
+		dtStudentQuiz.on('draw.dt', function() {
+			var pageInfo = dtStudentQuiz.page.info();
+			dtStudentQuiz.column(0, { page: 'current' }).nodes().each(function(cell, i) {
+				cell.innerHTML = '<strong>' + (pageInfo.start + i + 1) + '</strong>';
+			});
+		});
+
+		dtStudentQuiz.draw(false);
 	}
 
 	$(function() {

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Mar 11, 2026 at 04:06 PM
+-- Generation Time: Mar 11, 2026 at 05:22 PM
 -- Server version: 8.4.3
 -- PHP Version: 8.3.16
 
@@ -153,8 +153,8 @@ CREATE TABLE `faculty_levels` (
 --
 
 INSERT INTO `faculty_levels` (`id`, `faculty_id`, `level_id`, `date_updated`) VALUES
-(11, 5, 1, '2026-03-11 10:56:08'),
-(12, 6, 195, '2026-03-11 10:56:33');
+(14, 6, 195, '2026-03-11 12:16:25'),
+(15, 5, 1, '2026-03-11 12:16:32');
 
 -- --------------------------------------------------------
 
@@ -927,6 +927,7 @@ CREATE TABLE `quiz_category` (
   `id` int NOT NULL,
   `cat_name` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `cat_descrip` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_by` int NOT NULL DEFAULT '1',
   `state` bit(1) NOT NULL DEFAULT b'1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -934,8 +935,8 @@ CREATE TABLE `quiz_category` (
 -- Dumping data for table `quiz_category`
 --
 
-INSERT INTO `quiz_category` (`id`, `cat_name`, `cat_descrip`, `state`) VALUES
-(1, 'Psicométricas', 'Preguntas evaluación psicométrica.', b'1');
+INSERT INTO `quiz_category` (`id`, `cat_name`, `cat_descrip`, `created_by`, `state`) VALUES
+(1, 'Psicométricas', 'Preguntas evaluación psicométrica.', 22, b'1');
 
 -- --------------------------------------------------------
 
@@ -1019,8 +1020,8 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `name`, `user_type`, `username`, `password`, `status`, `date_updated`) VALUES
 (1, 'Administrator', 1, 'admin', 'admin123', 1, '2020-09-07 09:10:49'),
 (20, 'Maritza Rueda', 3, 'm1', 'm1', 1, '2026-03-10 16:41:26'),
-(21, 'Patricio Rosas', 2, 'dinarp', '@Dinarp', 1, '2026-03-11 10:56:08'),
-(22, 'Maritza Rueda', 2, 'psico', '@Psico', 1, '2026-03-11 10:56:33'),
+(21, 'Patricio Rosas', 2, 'adminprosas', 'prosas', 1, '2026-03-11 12:16:32'),
+(22, 'Maritza Rueda', 2, 'adminmrueda', 'mrueda', 1, '2026-03-11 12:16:25'),
 (23, 'Patricio Rosas', 3, 'p1', 'p1', 1, '2026-03-10 16:41:43');
 
 --
@@ -1152,7 +1153,7 @@ ALTER TABLE `evaluation_answers`
 -- AUTO_INCREMENT for table `evaluation_detail`
 --
 ALTER TABLE `evaluation_detail`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT for table `evaluation_history`
@@ -1164,7 +1165,7 @@ ALTER TABLE `evaluation_history`
 -- AUTO_INCREMENT for table `evaluation_list`
 --
 ALTER TABLE `evaluation_list`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `evaluation_student_list`
@@ -1182,7 +1183,7 @@ ALTER TABLE `faculty`
 -- AUTO_INCREMENT for table `faculty_levels`
 --
 ALTER TABLE `faculty_levels`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `history`
@@ -1194,7 +1195,7 @@ ALTER TABLE `history`
 -- AUTO_INCREMENT for table `levels`
 --
 ALTER TABLE `levels`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=233;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=252;
 
 --
 -- AUTO_INCREMENT for table `questions`
