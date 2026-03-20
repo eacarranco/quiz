@@ -93,8 +93,8 @@ include('header_adminlte.php');
 </div>
 
 <!-- Modal Gestionar Pregunta -->
-<div class="modal fade" id="manage_question" tabindex="-1" role="dialog" aria-labelledby="manage_question_title">
-	<div class="modal-dialog modal-centered" role="document">
+<div class="modal fade modal-fullscreen-sm-down" id="manage_question" tabindex="-1" role="dialog" aria-labelledby="manage_question_title">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 
@@ -103,7 +103,7 @@ include('header_adminlte.php');
 						aria-hidden="true">&times;</span></button>
 			</div>
 			<form id='question-frm'>
-				<div class="modal-body">
+				<div class="modal-body modal-body-scroll">
 					<div id="msg"></div>
 					<div class="form-row">
 						<div class="form-group col-md-12">
@@ -205,8 +205,8 @@ include('header_adminlte.php');
 	</div>
 </div>
 
-<div class="modal fade" id="manage_student" tabindex="-1" role="dialog" aria-labelledby="manage_student_title">
-	<div class="modal-dialog modal-centered" role="document">
+<div class="modal fade modal-fullscreen-sm-down" id="manage_student_quiz" tabindex="-1" role="dialog" aria-labelledby="manage_student_title">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 
@@ -215,7 +215,7 @@ include('header_adminlte.php');
 						aria-hidden="true">&times;</span></button>
 			</div>
 			<form id='student-frm'>
-				<div class="modal-body">
+				<div class="modal-body modal-body-scroll">
 					<div id="msg"></div>
 					<div class="form-group">
 						<label>Student/s</label>
@@ -257,7 +257,7 @@ include('header_adminlte.php');
 
 		// Fijar aria-hidden para accesibilidad WCAG
 		// Estrategia: Remover aria-hidden cuando Bootstrap intenta agregarlo
-		var modalElements = document.querySelectorAll('#manage_question, #manage_student');
+		var modalElements = document.querySelectorAll('#manage_question, #manage_student_quiz');
 
 		modalElements.forEach(function (modal) {
 			// Observer para remover aria-hidden si se agrega
@@ -273,7 +273,7 @@ include('header_adminlte.php');
 		});
 
 		// Remover aria-hidden al mostrar el modal
-		$('#manage_question, #manage_student').on('show.bs.modal', function () {
+		$('#manage_question, #manage_student_quiz').on('show.bs.modal', function () {
 			$(this).removeAttr('aria-hidden');
 		});
 
@@ -294,7 +294,7 @@ include('header_adminlte.php');
 		})
 		$(document).on('click', '#new_student', function () {
 			$('#msg').html('')
-			$('#manage_student').modal('show')
+			$('#manage_student_quiz').modal('show')
 		})
 		$(document).on('click', '.edit_question', function () {
 			var id = $(this).attr('data-id')

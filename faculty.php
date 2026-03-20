@@ -109,8 +109,8 @@
 </div>
 
 <!-- Modal Gestionar Tema -->
-<div class="modal fade" id="manage_faculty" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal fade modal-fullscreen-sm-down" id="manage_faculty" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="myModallabel">Agregar Nuevo Profesor</h5>
@@ -119,7 +119,7 @@
                 </button>
             </div>
             <form id='faculty-frm'>
-                <div class="modal-body">
+                <div class="modal-body modal-body-scroll">
                     <div id="msg"></div>
                     <div class="form-group">
                         <label>Nombre Profesor</label>

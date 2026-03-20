@@ -104,15 +104,15 @@ include('header_adminlte.php');
 </div>
 
 <?php if ($_SESSION['login_user_type'] != 3): ?>
-<div class="modal fade" id="manage_quiz" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal fade modal-fullscreen-sm-down" id="manage_quiz" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Agregar Cuestionario</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="quiz-frm">
-                <div class="modal-body">
+                <div class="modal-body modal-body-scroll">
                     <div id="quiz_msg" class="mb-2"></div>
                     <input type="hidden" name="id" id="quiz_id" value="">
                     <?php

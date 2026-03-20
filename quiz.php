@@ -112,14 +112,14 @@ include('header_adminlte.php');
     </div>
 </div>
 
-<div class="modal fade" id="emptyModal" tabindex="-1" aria-labelledby="emptyModalTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+<div class="modal fade modal-fullscreen-sm-down" id="emptyModal" tabindex="-1" aria-labelledby="emptyModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="emptyModalTitle">Modal Vacio</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body"></div>
+            <div class="modal-body modal-body-scroll"></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
@@ -127,15 +127,15 @@ include('header_adminlte.php');
     </div>
 </div>
 
-<div class="modal fade" id="quizModal" tabindex="-1" aria-labelledby="quizModalTitle" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+<div class="modal fade modal-fullscreen-sm-down" id="quizModal" tabindex="-1" aria-labelledby="quizModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="quizModalTitle">Agregar Cuestionario</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="quizForm" method="POST">
-                <div class="modal-body">
+                <div class="modal-body modal-body-scroll">
                     <div id="msg_quiz"></div>
                     <div id="error-msg-quiz" class="alert alert-danger" style="display:none;"></div>
                     <input type="hidden" name="id" id="quiz_id" value="">

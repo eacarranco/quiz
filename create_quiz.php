@@ -11,8 +11,8 @@ include ('header_adminlte.php');
 </div>
 
 <!-- Modal Agregar Categoría -->
-<div class="modal fade" id="modal_new_category" tabindex="-1" role="dialog">
-	<div class="modal-dialog modal-dialog-centered">
+<div class="modal fade modal-fullscreen-sm-down" id="modal_new_category" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 		<div class="modal-content">
 			<div class="modal-header bg-primary text-white">
 				<h5 class="modal-title"><i class="fa fa-folder-plus"></i> Agregar Nueva Categoría</h5>
@@ -20,7 +20,7 @@ include ('header_adminlte.php');
 					<span>&times;</span>
 				</button>
 			</div>
-			<div class="modal-body">
+			<div class="modal-body modal-body-scroll">
 				<div id="msg_category"></div>
 				<div class="form-group">
 					<label for="cat_name"><strong>Nombre de la Categoría</strong></label>

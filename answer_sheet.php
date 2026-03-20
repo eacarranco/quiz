@@ -87,9 +87,9 @@ $quiz = $conn->query("SELECT * FROM quiz_list where id =" . $_GET['id'] . " orde
 </style>
 
 <!-- Modal de Calificación -->
-<div class="modal fade" id="scoreModal" tabindex="-1" role="dialog" aria-labelledby="scoreModalLabel"
+<div class="modal fade modal-fullscreen-sm-down" id="scoreModal" tabindex="-1" role="dialog" aria-labelledby="scoreModalLabel"
 	aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered" role="document">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
 		<div class="modal-content border-0" style="box-shadow: 0 10px 40px rgba(0,0,0,0.1); border-radius: 12px;">
 			<div class="score-modal-content">
 				<div class="score-circle">

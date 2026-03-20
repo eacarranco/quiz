@@ -81,6 +81,21 @@ $(function() {
   $(document).on('shown.bs.modal', function(e) {
     $(e.target).find('input:first, textarea:first, select:first').focus();
   });
+
+  // Ajuste dinámico de altura modal para dispositivos pequeños
+  function ajustarModalAlto() {
+    var viewportHeight = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+    $('.modal.show .modal-dialog').each(function() {
+      var $dialog = $(this);
+      var offset = 80; // margen superior + inferior
+      var available = viewportHeight - offset;
+      $dialog.css('max-height', available + 'px');
+      $dialog.find('.modal-body.modal-body-scroll').css('max-height', (available - 140) + 'px');
+    });
+  }
+
+  $(window).on('resize orientationchange', ajustarModalAlto);
+  $(document).on('shown.bs.modal', ajustarModalAlto);
 });
 </script>
 

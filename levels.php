@@ -136,15 +136,15 @@ include('header_adminlte.php');
     </div>
 </div>
 
-<div class="modal fade" id="manage_level" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+<div class="modal fade modal-fullscreen-sm-down" id="manage_level" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Nuevo Nivel</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="level-frm">
-                <div class="modal-body">
+                <div class="modal-body modal-body-scroll">
                     <div id="level_msg" class="mb-2"></div>
                     <input type="hidden" name="id" id="level_id" value="">
 

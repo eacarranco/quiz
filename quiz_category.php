@@ -113,15 +113,15 @@ include('header_adminlte.php');
     </div>
 </div>
 
-<div class="modal fade" id="manage_quiz_category" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+<div class="modal fade modal-fullscreen-sm-down" id="manage_quiz_category" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Nueva Categoría</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="quiz-category-frm">
-                <div class="modal-body">
+                <div class="modal-body modal-body-scroll">
                     <div id="quiz_category_msg" class="mb-2"></div>
                     <input type="hidden" name="id" id="quiz_category_id" value="">
 

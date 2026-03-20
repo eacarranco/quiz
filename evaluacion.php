@@ -142,15 +142,15 @@ include('header_adminlte.php');
     </div>
 </div>
 
-<div class="modal fade" id="manage_evaluation" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+<div class="modal fade modal-fullscreen-sm-down" id="manage_evaluation" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable modal-lg-md-down">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Nueva Evaluación</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="evaluation-frm">
-                <div class="modal-body">
+                <div class="modal-body modal-body-scroll">
                     <div id="evaluation_msg" class="mb-2"></div>
                     <input type="hidden" name="id" id="evaluation_id" value="">
 

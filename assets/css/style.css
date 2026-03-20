@@ -213,6 +213,39 @@ body {
   margin-left: -0.5rem;
 }
 
+/* Modal responsive adjustments */
+.modal-lg-md-down.modal-dialog {
+  max-width: 80%;
+  width: auto;
+}
+
+@media (max-width: 1199.98px) {
+  .modal-lg-md-down.modal-dialog {
+    max-width: 95%;
+    margin: 1rem auto;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .modal-lg-md-down.modal-dialog,
+  .modal-dialog {
+    max-width: 100%;
+    margin: 0.5rem auto;
+    height: calc(100vh - 1rem);
+    max-height: calc(100vh - 1rem);
+  }
+
+  .modal-content {
+    height: 100%;
+    border-radius: 0.5rem;
+  }
+
+  .modal-body.modal-body-scroll {
+    max-height: calc(100vh - 180px);
+    overflow-y: auto;
+  }
+}
+
 .form-row > [class*="col-"] {
   padding-right: 0.5rem;
   padding-left: 0.5rem;

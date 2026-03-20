@@ -148,13 +148,13 @@ include('header_adminlte.php');
                         </div>
                     </form>
 
-                    <div class="modal fade" id="evaluationEndModal" tabindex="-1" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal fade modal-fullscreen-sm-down" id="evaluationEndModal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title">Evaluación finalizada</h5>
                                 </div>
-                                <div class="modal-body">
+                                <div class="modal-body modal-body-scroll">
                                     <p class="mb-2"><strong>Evaluación:</strong> <?php echo htmlspecialchars($evaluation['eval_name']); ?></p>
                                     <p class="mb-2"><strong>Descripción:</strong> <?php echo htmlspecialchars($evaluation['eval_description']); ?></p>
                                     <p class="mb-0"><strong>Nota obtenida:</strong> <span id="end_modal_score" class="badge bg-success">-</span></p>
